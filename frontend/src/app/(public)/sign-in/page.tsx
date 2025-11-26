@@ -17,7 +17,7 @@ export default function SignInPage() {
     mutationFn: authQueryOptions.signInOptions.mutationFunction,
     onSuccess: () => {
       toast.success("Signed in successfully!");
-      router.push("/dashboard");
+      router.push("/");
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
