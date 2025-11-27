@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/app/hooks/useAuth"
-import { useChartAccess } from "@/app/hooks/useChartAccess"
+import { usePermissions } from "@/app/hooks/usePermissions"
 import { ChartBar1 } from "@/components/app/chart-bar-1"
 import { ChartBar2 } from "@/components/app/chart-bar-2"
 import { ChartLineDefault } from "@/components/app/chart-line-default"
@@ -10,9 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Home() {
   const { currentUserData, isCurrentUserLoading } = useAuth()
-  const { hasAccess } = useChartAccess(currentUserData?.data?.user?.role)
+  const { canView, isPermissionsLoading } = usePermissions(currentUserData?.data?.user?.role)
 
-  if (isCurrentUserLoading) {
+  if (isCurrentUserLoading || isPermissionsLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
         <div className="w-full max-w-7xl px-4 py-8">
@@ -41,29 +41,29 @@ export default function Home() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-            {/* Bar Chart 1 - Admin & Analyst */}
-            {hasAccess("barChart1") && (
+            {/* Bar Chart 1 */}
+            {canView("barChart1") && (
               <div>
                 <ChartBar1 />
               </div>
             )}
 
-            {/* Bar Chart 2 - Admin Only */}
-            {hasAccess("barChart2") && (
+            {/* Bar Chart 2 */}
+            {canView("barChart2") && (
               <div>
                 <ChartBar2 />
               </div>
             )}
 
-            {/* Line Chart - All Roles */}
-            {hasAccess("lineChart") && (
+            {/* Line Chart */}
+            {canView("lineChart") && (
               <div>
                 <ChartLineDefault />
               </div>
             )}
 
-            {/* Pie Chart - Admin & Analyst */}
-            {hasAccess("pieChart") && (
+            {/* Pie Chart */}
+            {canView("pieChart") && (
               <div>
                 <ChartPieSimple />
               </div>
@@ -71,10 +71,10 @@ export default function Home() {
           </div>
 
           {/* No charts available message */}
-          {!hasAccess("barChart1") &&
-            !hasAccess("barChart2") &&
-            !hasAccess("lineChart") &&
-            !hasAccess("pieChart") && (
+          {!canView("barChart1") &&
+            !canView("barChart2") &&
+            !canView("lineChart") &&
+            !canView("pieChart") && (
               <div className="rounded-lg border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
                 <p className="text-zinc-600 dark:text-zinc-400">
                   You do not have access to any charts with your current role.
