@@ -11,7 +11,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
     <SidebarProvider>
       <AppSidebar />
-      <main>
+      <main className="w-full">
         <SidebarTrigger />
         {children}
       </main>
